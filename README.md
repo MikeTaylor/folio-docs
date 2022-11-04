@@ -16,5 +16,5 @@ I have often found myself writing documents about aspects of FOLIO that have gen
 * [Port-Forwarding for development](https://github.com/folio-org/mod-graphql/blob/master/doc/port-forwarding-for-development.md) in `mod-graphql`
 * [Uninstalling a running module](https://github.com/folio-org/mod-graphql/blob/master/doc/remove-running-modules.md) in `mod-graphql`
 
-This is a holding area for such documents, which can then be moved somewhere more official as and when that is appropriate.
+As well as being an index to existing documents of this kind, the present repository is a holding area for new documents, which can then be moved somewhere more official as and when that is appropriate.
 
