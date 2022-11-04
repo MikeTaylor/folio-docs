@@ -1,5 +1,7 @@
 # folio-docs
 
+## The past
+
 I have often found myself writing documents about aspects of FOLIO that have general applicability, but arise in the context of a specific project. Those documents typically get written in the `doc` directory of whatever project I was working on at the time, which makes them hard to find later. Some examples:
 
 * 2017-01-12 -- [A modest proposal for error formats in FOLIO](https://github.com/folio-org/okapi/blob/master/doc/error-formats-in-folio.md) in `okapi`
@@ -18,4 +20,10 @@ I have often found myself writing documents about aspects of FOLIO that have gen
 * 2022-07-06 -- [Deciding what modules to release for a new FOLIO flower release](https://github.com/folio-org/ui-ldp/blob/master/doc/new-folio-release.md) in `ui-ldp`.
 
 As well as being an index to existing documents of this kind, the present repository is a holding area for new documents, which can then be moved somewhere more official as and when that is appropriate.
+
+## The present
+
+From now on, I am going to put such documents in this repository. Here is what exists so far:
+
+* 2022-11-04 -- [Configuration and customization in FOLIO](doc/customization.md)
 
