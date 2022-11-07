@@ -32,7 +32,7 @@ Most of the examples in this list are stored in `mod-configuration` (see below),
 ## The current situation
 
 
-### `mod-configuration`
+### mod-configuration
 
 Early in FOLIO history, [`mod-configuration`](https://github.com/folio-org/mod-configuration) was created as a repository for all configuration information. it has been widely used, including for most of the purposes listed above. It provides a simple API where a compound key consisting of module, configName and optionally user is mapped to a string value (sometimes a JSON string) and optionally a description.
 
