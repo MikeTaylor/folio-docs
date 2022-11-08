@@ -26,4 +26,5 @@ As well as being an index to existing documents of this kind, the present reposi
 From now on, I am going to put such documents in this repository. Here is what exists so far:
 
 * 2022-11-04 -- [Configuration and customization in FOLIO](doc/customization.md)
+* 2022-11-08 -- [Fixing the security problem in mod-configuration](doc/fixing-mod-configuration.md)
 
