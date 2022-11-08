@@ -5,10 +5,6 @@
 * [The current situation](#the-current-situation)
     * [mod-configuration](#mod-configuration)
     * [Module-specific configuration stores](#module-specific-configuration-stores)
-* [Digression: can `mod-configuration` be made secure?](#digression-can-mod-configuration-be-made-secure)
-    * [Permission-name mangling](#permission-name-mangling)
-    * [Desired permissions](#desired-permissions)
-    * [Backward-compatibility](#backward-compatibility)
 * [Requirements for a new configuration solution](#requirements-for-a-new-configuration-solution)
 * [A proposal](#a-proposal)
 
@@ -58,6 +54,8 @@ The FOLIO Wiki has  some design documents on what might supersede mod-`configura
 
 But the issue to replace `mod-configuration` with distributed configuration was filed over a year and a half ago, and no real progress seems to have been made with it since then.
 
+It may be possible to [make `mod-configuration` secure](fixing-mod-configuration.md). But if that approach is not taken, then we will need to do something different.
+
 
 ### Module-specific configuration stores
 
@@ -69,57 +67,6 @@ Others, such as [`mod-ldp`](https://github.com/folio-org/mod-ldp/), are providin
 
 It seems clear that the current situation is not really acceptable. Unless a way can be found to make `mod-configuration` sufficiently secure, we will need a new unified approach to configuration.
 
-
-
-## Digression: can `mod-configuration` be made secure?
-
-Perhaps there is a way to rehabilitate `mod-configuration`.
-
-At present, one of the fields in each configuration entry indicates the module that the entry belongs to. For example, the `mod-login-saml` stores the identity provider URL in an entry that has `module`=`LOGIN-SAML`, `configName`=`saml`, `code`=`idp.url`, and with a value of (for example) `https://samltest.id/saml/idp`.
-
-The configuration code could be expanded to examine permissions whose names are derived from the specified module -- in this case, for example,
-* `configuration.byModule.LOGIN-SAML.read` to read values
-* `configuration.byModule.LOGIN-SAML.write` to write values
-
-This would probably address the great majority of security concerns, but there are some wrinkles that would need to be addressed.
-
-
-### Permission-name mangling
-
-There is no well-established convention for how module identities are specified in the `module` field of a configuation entry. Current entries include `@folio/users`, `BULKEDIT`, `GOBI`, and `LOGIN-SAML`. Evidently, some module names are scoped to organization namespaces, some are not; some are lower-case and some are capitalized; some have underscored between words, and others omit these.
-
-Some of these characters will likely not be usable in permission names: for example, `configuration.byModule.@folio/users.read` may not work. If this is so, then we will need a convention for converting the module-name tags used in `mod-configuration` into a form that can be used in permission names: for example, downcasing all capital letters and transforming everything but  alphanumerics and hyphens into underscores, which would give us permission names like `configuration.byModule.login-saml.read` and `configuration.byModule._folio_users.read`.
-
-
-### Desired permissions
-
-Okapi will only pass `mod-configuration` the desired permissions that it actively specifies that it wants, in the `permissionsDesired` element of a the relevant handler definition in its module descriptor. Obviously the maintainer of that module descriptor cannot know in advance which modules will use it, so it cannot list all the relevant `configuration.byModule.MODULE.read` and `configuration.byModule.MODULE.write` permissions. In order to meaningfully support the proposed approach to securing configuration, Okapi (or perhaps `mod-authorization` or something related) would need to be modifield to support wildcards in desired permissions. Then the `mod-configuration` module descriptor could specify:
-
-	"handlers": [
-	  {
-	    "methods": ["GET"],
-	    "pathPattern": "/configurations/byModule/{id}",
-	    "permissionsRequired": [
-	      "configuration.entries.item.get"
-	    ],
-	    "permissionsDesired": [
-	      "configuration.byModule.*.read"
-	    ],
-	  },
- 
-To have all permissions matching the pattern `configuration.byModule.*.read` forwarded to it.
-
-
-### Backward-compatibility
-
-The requirement for a user to have a new module-specific permission in order to use `mod-configuration` would constitute a breaking change -- and not just a theoretical one, but a change that would in practice break a lot of things.
-
-For this reason, we would keep the old API as it is, and gradually move away from it to the new API, which would be on a different path -- for example, the 
-`/configurations/byModule` suggested in the module-descriptor fragment above.
-
-Since client modules would need to opt into the new API (by defining their desired permissions for read and write, and by switching to the new API path), it would make sense also to change the module-name convention used in the configuration entries at the new endpoint. We could canonicalize on a convention where, for example, we always use `@NAMESPACE/NAME` for UI modules and `mod-NAME` for backend modules, yielding `@folio/users` and `mod-users`.
-
-(Optionally, we could also take this opportunity to remove `code`, the unnecessary third facet to configurate-entry names, so that each entry is identified only by the combination of `module` and `configName`.)
 
 
 ## Requirements for a new configuration solution
