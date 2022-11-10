@@ -70,7 +70,7 @@ For this reason, we would keep the old API as it is, and gradually move away fro
 
 Since client modules would need to opt into the new API (by defining their desired permissions for read and write, and by switching to the new API path), it would make sense also to change the module-name convention used in the configuration entries at the new endpoint. We could canonicalize on a convention where, for example, we always use `@NAMESPACE/NAME` for UI modules and `mod-NAME` for backend modules, yielding `@folio/users` and `mod-users`.
 
-(Optionally, we could also take this opportunity to remove `code`, the unnecessary third facet to configurate-entry names, so that each entry is identified only by the combination of `module` and `configName`.)
+(Optionally, we could also take this opportunity to remove `code`, the unnecessary third facet to configuration-entry names, so that each entry is identified only by the combination of `module` and `configName`.)
 
 
 
