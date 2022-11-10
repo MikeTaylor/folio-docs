@@ -81,7 +81,9 @@ It seems clear that the current situation is not really acceptable. Unless [a wa
 
 ## Requirements for a new configuration solution
 
-XXX
+If we are to somehow provide a unified approach to configuration within FOLIO, then it will need to be sufficiently general to meet the configuration and customization requirements of all modules that use or want to use these  facilities. As a lower bound, we can consider the requirements of the LDP app. This needs to use configuration for several rather different purposes:
+
+1. xXX
 
 
 
