@@ -81,9 +81,27 @@ It seems clear that the current situation is not really acceptable. Unless [a wa
 
 ## Requirements for a new configuration solution
 
-If we are to somehow provide a unified approach to configuration within FOLIO, then it will need to be sufficiently general to meet the configuration and customization requirements of all modules that use or want to use these  facilities. As a lower bound, we can consider the requirements of the LDP app. This needs to use configuration for several rather different purposes:
+If we are to somehow provide a unified approach to configuration within FOLIO, then it will need to be sufficiently general to meet the configuration and customization requirements of all modules that use or want to use these  facilities. As a lower bound, we can consider the requirements of the LDP app. This needs to use configuration for several rather different purposes. It must store:
 
-1. xXX
+1. Connection details (URL, username, password) for the underlying LDP database.
+
+2. A list of tables that should be disabled for querying. This can be encoded in a string as a JSON array.
+
+3. A set of numeric parameters, such as the default number of records to show and the maximum number to export.
+
+4. Connection details for a small set of GitHub repositories that will contain SQL query templates: repository owner, repository name, branch and access token for each.
+
+5. A set of potentially many saved "JSON queries" that can be retrieved and run. ("JSON query" here means a query expressed in a structured form that can be maintained using the LDP Builder app, as opposed to an SQL string.)
+
+For #1 and #2, we need to store system-wide defaults, and do not want users to be able to override these.
+
+For #3, we could store all the related parameters together as values in a single JSON object, or we might elect to store each in its own configuration entry. Either way, we must store system-wide values but we might also wish to allow those values to be overridden for individual users.
+
+#4 introduces a new requirement, the need to store multiple records and maintain them as a list, rather than a single record. Not only this, but while a system-wide set of entries is required, it would not be unreasonable for an individual user to want to use a modified list. What the semantics would be for overriding a list is itself an open question, even before we get to the matter of how to implement the desired semantics.
+
+Finally, #5 is similar to #4 except that the number of stored entries may be much greater -- potentially enough that we would not want to present a list of all of them on a single page. Also, the semantics of per-user overrides will be different. Probably we would need to maintain a system-wide set of queries and users may also add further private queries of their own.
+
+The full set of requirements, then, is both sophisticated and subtle.
 
 
 
