@@ -7,7 +7,11 @@
     * [Other candidate approaches](#other-candidate-approaches)
     * [Module-specific configuration stores](#module-specific-configuration-stores)
 * [Requirements for a new configuration solution](#requirements-for-a-new-configuration-solution)
-* [A proposal](#a-proposal)
+* [Concrete proposals](#concrete-proposals)
+    * [Independent impleentations](#independent-impleentations)
+    * [A Java library](#a-java-library)
+    * [A FOLIO module](#a-folio-module)
+* [Tentative conclusion](#tentative-conclusion)
 
 
 
@@ -40,8 +44,6 @@ Early in FOLIO history, [`mod-configuration`](https://github.com/folio-org/mod-c
 However, `mod-configuration` has an important security hole: as explained at [UXPROD-3018 (Distributed Configuration)](https://issues.folio.org/browse/UXPROD-3018), modules cannot specify which permissions should govern access to which configuration entries, so that any user with access to one entry has access to them all. Indeed, the contents of `mod-configuration` can be viewed using the developer settings at [`/settings/developer/okapi-configuration`](https://folio-snapshot.dev.folio.org/settings/developer/okapi-configuration).
 
 Because of this issue, [as of 28 March 2022](https://github.com/folio-org/mod-configuration/commit/812c7d15fcb264359c89c2d5b43696f7c27b9462), `mod-configuration` is [deprecated](https://github.com/folio-org/mod-configuration/blob/master/README.md#deprecation). Unhelpfully, it is not deprecated _in favour of_ anything. Developers are merely told not to use it, and to roll their own configuration mechanisms. (This is known as "distributed configuration").
-
-It may be possible to [make `mod-configuration` secure](fixing-mod-configuration.md). But if that approach is not taken, then we will need to do something different.
 
 
 ### Other candidate approaches
@@ -105,9 +107,45 @@ The full set of requirements, then, is both sophisticated and subtle. While most
 
 
 
-## A proposal
+## Concrete proposals
 
-XXX
+There are three ways to provide this configuration/customization functionality to all the modules that need it.
+
+
+### Independent implementations
+
+This option is mentioned only for completeness. We do have the option of continuing as we are, in which each back-end module independently implements its own configuration facilities, with all the inconsistency and duplication of effort that this entails.
+
+Given that this seems like the worst option, why is it the one we as a community are currently pursuing? This seems to be a group-action problem. For any given module, it's quicker to hack in the configuration requirements needed _right now_ than to wait for, or contribute towards, a more general solution. But once the problem is addressed properly, the whole community will benefit.
+
+
+### A Java library
+
+One way to address a shared approach to configuration is to provide a Java library that implements the facilities outlined above, persisting configuration entries to the FOLIO PostSQL database. This could be included by an Java-based module that needs configuration, and access to it could be provided as part of its own API, under its own WSAPI path, protected by its own permissions.
+
+The key advantage would be that a single codebase, shared by all modules, would be the focus of work in developing additional features, security testing, documentation, etc.
+
+One disadvantage is that we presently have Java-based modules built on three different foundations:
+[RAML Module Builder (RMB)](https://github.com/folio-org/raml-module-builder),
+[Spring Way](https://github.com/folio-org/folio-spring-base),
+and [`folio-vertx-lib`](https://github.com/folio-org/folio-vertx-lib). Integration of a configuration library would likely be rather different in each of these environments, meaning that we would possibly end up with three small "bridging" libraries -- one per foundation -- as well as the main library.
+
+A more serious disadvantage is that such a library would be available only for modules written in Java. Although Java dominates the present module ecosystem, FOLIO is explicitly a polyglot system, and configuration support for modules written in other languages is desirable. In particular, some UI modules use configuration services directly, and would not able to do so unless they were furnished by means of a WSAPI.
+
+
+### A FOLIO module
+
+A more general way to provide configuration services is by means of a module, in keeping with FOLIO's module architecture.
+
+The key advantage to this approach is that such a configuration facility is available to all modules, both in the UI and on the back end.
+
+Another signficant advantage is that the core of such a module already exists, in our old friend [`mod-configuration`](https://github.com/folio-org/mod-configuration). Fixing a problem in an existing module is an order of magnitude less work than creating a new model, and it seems that it's possible to [make `mod-configuration` secure](fixing-mod-configuration.md) with relatively small changes.
+
+
+
+## Tentative conclusion
+
+Given the current situation, where `mod-configuration` exists and continues to be widely used despite its state of deprecation, simply fixing its security hole seems like the easiest _and_ most effective solution. This module's [existing search facilities](https://github.com/folio-org/mod-configuration#query-syntax) -- which admittedly are in need of much better documentation -- should suffice to support most or all of the scenarios outlined above: for example, it's possible to search configuration entries in a way that limits results to those entries associated with a particular user.
 
 
 
