@@ -22,13 +22,15 @@ Can `mod-configuration` be made secure? Perhaps there is a way to rehabilitate i
 
 ## Proposal
 
-At present, one of the fields in each configuration entry indicates the module that the entry belongs to. For example, the `mod-login-saml` stores the identity provider URL in an entry that has `module`=`LOGIN-SAML`, `configName`=`saml`, `code`=`idp.url`, and with a value of (for example) `https://samltest.id/saml/idp`.
+At present, one of the fields in each configuration entry indicates the module that the entry belongs to. For example, `mod-login-saml` stores the identity provider URL in an entry that has `module`=`LOGIN-SAML`, `configName`=`saml`, `code`=`idp.url`, and with a value of (for example) `https://samltest.id/saml/idp`.
 
 The configuration code could be expanded to examine permissions whose names are derived from the specified module -- in this case, for example,
 * `configuration.byModule.LOGIN-SAML.read` to read values
 * `configuration.byModule.LOGIN-SAML.write` to write values
 
-This would probably address the great majority of security concerns, but there are some wrinkles that would need to be addressed.
+This would address the great majority of security concerns: each module would have its own pair of permissions for read-only and read/write access to the coniguration store, and a user could be assigned any combination of permissions. A single user might have permission to read the configuration of which users are suppressed from editing, to write the bulk-edit expiration period, and not to access the OAI-PMH server settings at all.
+
+There are however some wrinkles that would need to be addressed.
 
 
 ### Permission-name mangling
