@@ -27,4 +27,5 @@ From now on, I am going to put such documents in this repository. Here is what e
 
 * 2022-11-04 -- [Configuration and customization in FOLIO](doc/customization.md)
 * 2022-11-08 -- [Fixing the security problem in mod-configuration](doc/fixing-mod-configuration.md)
+* 2022-11-16 -- [A user-interface for FOLIO customization](doc/customization-ui.md)
 
