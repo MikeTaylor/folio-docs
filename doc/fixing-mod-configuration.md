@@ -44,7 +44,7 @@ There are however some wrinkles that would need to be addressed.
 
 In the present version of `mod-configuration` there is no well-established convention for how module identities are specified in the `module` field of a configuation entry. Current entries include `@folio/users`, `BULKEDIT`, `GOBI`, and `LOGIN-SAML`. Evidently, some module names are scoped to organization namespaces, some are not; some are lower-case and some are capitalized; some have underscored between words, and others omit these.
 
-Some of these characters are likely not to be usable in permission names: for example, a permission named `configuration.byScope.@folio/users.read` may not work. It is for this reason that the new `scope` field is limited to letters, digits, underscores and hyphens: the characters that are typically used in the facets of permission names.
+Some of the characters currently used in `module` fields are likely not to be usable in permission names: for example, a permission named `configuration.byScope.@folio/users.read` may not work. It is for this reason that the new `scope` field is limited to letters, digits, underscores and hyphens: the characters that are typically used in the facets of permission names.
 
 
 ### Desired permissions
