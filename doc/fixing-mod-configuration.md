@@ -1,6 +1,11 @@
 # Fixing the security problem in mod-configuration
 
 <!-- md2toc -l 2 fixing-mod-configuration.md -->
+* [Introduction](#introduction)
+* [Proposal](#proposal)
+    * [Permission-name restrictions](#permission-name-restrictions)
+    * [Desired permissions](#desired-permissions)
+    * [Backward-compatibility and migration](#backward-compatibility-and-migration)
 
 
 
@@ -22,57 +27,62 @@ Can `mod-configuration` be made secure? Perhaps there is a way to rehabilitate i
 
 ## Proposal
 
-At present, one of the fields in each configuration entry indicates the module that the entry belongs to. For example, `mod-login-saml` stores the identity provider URL in an entry that has `module`=`LOGIN-SAML`, `configName`=`saml`, `code`=`idp.url`, and with a value of (for example) `https://samltest.id/saml/idp`.
+At present, one of the fields in each configuration entry indicates the module that the entry belongs to. For example, `mod-login-saml` stores the identity provider URL in an entry that has `module`=`LOGIN-SAML`, `configName`=`saml`, `code`=`idp.url`, and with a value of (for example) `https://samltest.id/saml/idp`. In practice, the association of a configuration entry with a module has no consequences: the `module` field is only a facet of the key, along with `configName` and `code`.
 
-The configuration code could be expanded to examine permissions whose names are derived from the specified module -- in this case, for example,
-* `configuration.byModule.LOGIN-SAML.read` to read values
-* `configuration.byModule.LOGIN-SAML.write` to write values
+We propose to replace this `module` field with `scope`. This would be a short machine-readable string, composed only of letters, digits, underscores and hyphens, indicating the permission scope under which the entry is viewed and managed. Scopes may be module-wide (e.g. `login-saml` could be a scope) or may be more specific to particular areas of functionality within a module (e.g. `oaipmh-general` and `oaipmh-admin`.
 
-This would address the great majority of security concerns: each module would have its own pair of permissions for read-only and read/write access to the coniguration store, and a user could be assigned any combination of permissions. A single user might have permission to read the configuration of which users are suppressed from editing, to write the bulk-edit expiration period, and not to access the OAI-PMH server settings at all.
+The configuration code would then be enhanced to examine permissions whose names are derived from the entry's scope -- in this case, for example,
+* `configuration.byScope.login-saml.read` to read values
+* `configuration.byScope.login-saml.write` to write values
+
+This would address the great majority of security concerns: each module would manage its own scopes, each with its own pair of permissions for read-only and read/write access to the coniguration store. A user could be assigned any combination of permissions. A single user might have permission to read the configuration of which users are suppressed from editing, to write the bulk-edit expiration period, and not to access the OAI-PMH server settings at all.
 
 There are however some wrinkles that would need to be addressed.
 
 
-### Permission-name mangling
+### Permission-name restrictions
 
-There is no well-established convention for how module identities are specified in the `module` field of a configuation entry. Current entries include `@folio/users`, `BULKEDIT`, `GOBI`, and `LOGIN-SAML`. Evidently, some module names are scoped to organization namespaces, some are not; some are lower-case and some are capitalized; some have underscored between words, and others omit these.
+In the present version of `mod-configuration` there is no well-established convention for how module identities are specified in the `module` field of a configuation entry. Current entries include `@folio/users`, `BULKEDIT`, `GOBI`, and `LOGIN-SAML`. Evidently, some module names are scoped to organization namespaces, some are not; some are lower-case and some are capitalized; some have underscored between words, and others omit these.
 
-Some of these characters will likely not be usable in permission names: for example, `configuration.byModule.@folio/users.read` may not work. If this is so, then we will need a convention for converting the module-name tags used in `mod-configuration` into a form that can be used in permission names: for example, downcasing all capital letters and transforming everything but  alphanumerics and hyphens into underscores, which would give us permission names like `configuration.byModule.login-saml.read` and `configuration.byModule._folio_users.read`.
+Some of these characters are likely not to be usable in permission names: for example, a permission named `configuration.byScope.@folio/users.read` may not work. It is for this reason that the new `scope` field is limited to letters, digits, underscores and hyphens: the characters that are typically used in the facets of permission names.
 
 
 ### Desired permissions
 
-Okapi will only pass `mod-configuration` the desired permissions that it actively specifies that it wants, in the `permissionsDesired` element of the relevant handler definition in its module descriptor. Obviously the maintainer of that module descriptor cannot know in advance which modules will use it, so it cannot list all the relevant `configuration.byModule.MODULE.read` and `configuration.byModule.MODULE.write` permissions.
+Okapi will only pass `mod-configuration` the desired permissions that it actively specifies that it wants, in the `permissionsDesired` element of the relevant handler definition in its module descriptor. Obviously the maintainer of that module descriptor cannot know in advance which modules will use it, so it cannot list all the relevant `configuration.byScope.SCOPE.read` and `configuration.byScope.SCOPE.write` permissions.
 
-But this turns out not to be a problem. Whatever desired-permission string is specified in a module-descriptor handler declaration, Okapi passes it blindly through to `mod-authorization` -- and that module already does wildcard expansion. As a result, we can use wilcards in desired-permission names.
+But this turns out not to be a problem. Whatever desired-permission string is specified in a module-descriptor handler declaration, Okapi passes it blindly through to `mod-authorization` -- and that module already does wildcard expansion. As a result, we can use wildcards in desired-permission names.
 
 So the `mod-configuration` module descriptor can specify:
 
 	"handlers": [
 	  {
 	    "methods": ["GET"],
-	    "pathPattern": "/configurations/byModule/{id}",
+	    "pathPattern": "/configurations/byScope/{id}",
 	    "permissionsRequired": [
 	      "configuration.entries.item.get"
 	    ],
 	    "permissionsDesired": [
-	      "configuration.byModule.*.read"
+	      "configuration.byScope.*.read"
 	    ],
 	  },
  
-To have all permissions matching the pattern `configuration.byModule.*.read` forwarded to it.
+To have all permissions matching the pattern `configuration.byScope.*.read` forwarded to it.
 
 
-### Backward-compatibility
+### Backward-compatibility and migration
 
-The requirement for a user to have a new module-specific permission in order to use `mod-configuration` would constitute a breaking change -- and not just a theoretical one, but a change that would in practice break a lot of things.
+The replacement of the `module` field with `scope` is a breaking change. Even if we re-used the existing `module` field with modified semantics, the requirement for a user to have a new module-specific (i.e. scope-specific) permission in order to use `mod-configuration` would constitute a breaking change: not just a theoretical one, but a change that would in practice break a lot of things.
 
-For this reason, we would keep the old API as it is, and gradually move away from it to the new API, which would be on a different path -- for example, the 
-`/configurations/byModule` suggested in the module-descriptor fragment above.
+For this reason, we would keep the old API as it is, and put the new one on a different WSAPI path -- for example, the 
+`/configurations/byScope` suggested in the module-descriptor fragment above, or perhaps something more terse such as `/config`.
 
-Since client modules would need to opt into the new API (by defining their desired permissions for read and write, and by switching to the new API path), it would make sense also to change the module-name convention used in the configuration entries at the new endpoint. We could canonicalize on a convention where, for example, we always use `@NAMESPACE/NAME` for UI modules and `mod-NAME` for backend modules, yielding `@folio/users` and `mod-users`.
+(Optionally, we could also take this opportunity to remove `code`, the unnecessary third facet to configuration-entry names, so that each entry is identified only by the combination of `scope` and `configName`.)
 
-(Optionally, we could also take this opportunity to remove `code`, the unnecessary third facet to configuration-entry names, so that each entry is identified only by the combination of `module` and `configName`.)
+The old, insecure configuration API would remain in play for the time being, and the addition of the new API would be a non-breaking change meriting only a minor version bump in `mod-configuration`.
 
+Over time, we would expect client modules to gradually move away from the old API to the new -- a relatively simple process which we would document in a short HOWTO document. Those clients that are are happy for their information to be globally available as in the present system can use a `global` scope defined by `mod-configuration` itself.
+
+At some point, we would announce the sunsetting of the old configuration WSAPI, and remaining clients would have a limited time to move away from it onto the new WSAPI. At the end of this period, the old WSAPI would be removed, and a new major version of `mod-configuration` would be released since we would now -- only at this point -- have a backwards-incompatible change.
 
 
