@@ -35,6 +35,8 @@ The configuration code would then be enhanced to examine permissions whose names
 * `configuration.byScope.login-saml.read` to read values
 * `configuration.byScope.login-saml.write` to write values
 
+It would be the responsibility of a module that uses a scope to define the permissions that are in it: for example, the permissions above would be defined in the module descriptor of `mod-login-saml`.
+
 This would address the great majority of security concerns: each module would manage its own scopes, each with its own pair of permissions for read-only and read/write access to the coniguration store. A user could be assigned any combination of permissions. A single user might have permission to read the configuration of which users are suppressed from editing, to write the bulk-edit expiration period, and not to access the OAI-PMH server settings at all.
 
 There are however some wrinkles that would need to be addressed.
