@@ -3,9 +3,10 @@
 <!-- md2toc -l 2 fixing-mod-configuration.md -->
 * [Introduction](#introduction)
 * [Proposal](#proposal)
+    * [User-owned configuration entries](#user-owned-configuration-entries)
     * [Permission-name restrictions](#permission-name-restrictions)
     * [Desired permissions](#desired-permissions)
-    * [Backward-compatibility and migration](#backward-compatibility-and-migration)
+* [Backward-compatibility and migration](#backward-compatibility-and-migration)
 
 
 
@@ -15,7 +16,9 @@ Early in FOLIO history, [`mod-configuration`](https://github.com/folio-org/mod-c
 
 `mod-configuration` is general and flexible, and has mostly worked well in practice. However, it has an important security hole: as explained at [UXPROD-3018 (Distributed Configuration)](https://issues.folio.org/browse/UXPROD-3018), modules cannot specify which permissions should govern access to which configuration entries, so that any user with access to one entry has access to them all. A user who has been granted permission to know whether or not tags are enabled thereby also has permission to see the LDP database connection details. Indeed, the contents of _all_ `mod-configuration` entries can be viewed using the developer settings at [`/settings/developer/okapi-configuration`](https://folio-snapshot.dev.folio.org/settings/developer/okapi-configuration).
 
-Because of this issue, [as of 28 March 2022](https://github.com/folio-org/mod-configuration/commit/812c7d15fcb264359c89c2d5b43696f7c27b9462), `mod-configuration` is [deprecated](https://github.com/folio-org/mod-configuration/blob/master/README.md#deprecation):
+There is also at present no way to provide a given user with access to only his or her own configuration entries, without also exposing everybody else's.
+
+Because of these issues, [as of 28 March 2022](https://github.com/folio-org/mod-configuration/commit/812c7d15fcb264359c89c2d5b43696f7c27b9462), `mod-configuration` is [deprecated](https://github.com/folio-org/mod-configuration/blob/master/README.md#deprecation):
 
 > This module is deprecated. Please do not add new configuration values to this module.
 >
@@ -42,6 +45,24 @@ This would address the great majority of security concerns: each module would ma
 There are however some wrinkles that would need to be addressed.
 
 
+### User-owned configuration entries
+
+In many situations, we will want users to be able to access (probaby both read and write) configuration entries belonging to them, but not to access (read _or_ write) those belonging to other users.
+
+There are two ways we could do this: by adding user-identity checks to access via the usual WSAPI endpoint; or by adding a separate endpoint for the user's own configuration entries.
+
+In either case, we will need to control users' access to their own entries by permissions. In the first approach, the code would need to check different permissions for the same endpoint, depending on whether a givene entry belongs to the user making the request. This seems like a recipe for confusion, so it is probably better to introduce a separate endpoint.
+
+While introducing a second endpoint, it makes sense to bring in a third, so separating access to global entries from access to entries belonging to other users. (Nearly all users will need read-access to global entries, but there is little reason for non-administrators to have any kind of access to entries belonging to other users.)
+
+So we will end up with three endpoints, e.g.:
+* `/config/global` -- access to global configuration entries
+* `/config/user` -- access to the user's owen configuration entries
+* `/config/other` -- access to the user's owen configuration entries
+
+Typical users will have read and write access to their own entries, read-only access to global entries, and no access to other users' entries.
+
+
 ### Permission-name restrictions
 
 In the present version of `mod-configuration` there is no well-established convention for how module identities are specified in the `module` field of a configuation entry. Current entries include `@folio/users`, `BULKEDIT`, `GOBI`, and `LOGIN-SAML`. Evidently, some module names are scoped to organization namespaces, some are not; some are lower-case and some are capitalized; some have underscored between words, and others omit these.
@@ -60,7 +81,7 @@ So the `mod-configuration` module descriptor can specify:
 	"handlers": [
 	  {
 	    "methods": ["GET"],
-	    "pathPattern": "/configurations/byScope/{id}",
+	    "pathPattern": "/config/global/{id}",
 	    "permissionsRequired": [
 	      "configuration.entries.item.get"
 	    ],
@@ -72,12 +93,13 @@ So the `mod-configuration` module descriptor can specify:
 To have all permissions matching the pattern `configuration.byScope.*.read` forwarded to it.
 
 
-### Backward-compatibility and migration
+
+## Backward-compatibility and migration
 
 The replacement of the `module` field with `scope` is a breaking change. Even if we re-used the existing `module` field with modified semantics, the requirement for a user to have a new module-specific (i.e. scope-specific) permission in order to use `mod-configuration` would constitute a breaking change: not just a theoretical one, but a change that would in practice break a lot of things.
 
 For this reason, we would keep the old API as it is, and put the new one on a different WSAPI path -- for example, the 
-`/configurations/byScope` suggested in the module-descriptor fragment above, or perhaps something more terse such as `/config`.
+`/config/global` suggested in the module-descriptor fragment above.
 
 (Optionally, we could also take this opportunity to remove `code`, the unnecessary third facet to configuration-entry names, so that each entry is identified only by the combination of `scope` and `configName`.)
 
