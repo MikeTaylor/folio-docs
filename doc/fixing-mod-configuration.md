@@ -57,8 +57,8 @@ While introducing a second endpoint, it makes sense to bring in a third, so sepa
 
 So we will end up with three endpoints, e.g.:
 * `/config/global` -- access to global configuration entries
-* `/config/user` -- access to the user's owen configuration entries
-* `/config/other` -- access to the user's owen configuration entries
+* `/config/user` -- access to the user's own configuration entries
+* `/config/other` -- access to other users' configuration entries
 
 Typical users will have read and write access to their own entries, read-only access to global entries, and no access to other users' entries.
 
