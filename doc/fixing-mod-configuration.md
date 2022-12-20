@@ -74,7 +74,7 @@ Some of the characters currently used in `module` fields are likely not to be us
 
 Okapi will only pass `mod-configuration` the desired permissions that it actively specifies that it wants, in the `permissionsDesired` element of the relevant handler definition in its module descriptor. Obviously the maintainer of that module descriptor cannot know in advance which modules will use it, so it cannot list all the relevant `configuration.byScope.SCOPE.read` and `configuration.byScope.SCOPE.write` permissions.
 
-But this turns out not to be a problem. Whatever desired-permission string is specified in a module-descriptor handler declaration, Okapi passes it blindly through to `mod-authorization` -- and that module already does wildcard expansion. As a result, we can use wildcards in desired-permission names.
+But this turns out not to be a problem. Whatever desired-permission string is specified in a module-descriptor handler declaration, Okapi passes it blindly through to `mod-authtoken` -- and that module already does wildcard expansion. As a result, we can use wildcards in desired-permission names.
 
 So the `mod-configuration` module descriptor can specify:
 
