@@ -5,10 +5,13 @@
 I have often found myself writing documents about aspects of FOLIO that have general applicability, but arise in the context of a specific project. Those documents typically get written in the `doc` directory of whatever project I was working on at the time, which makes them hard to find later. Some examples:
 
 * 2017-01-12 -- [A modest proposal for error formats in FOLIO](https://github.com/folio-org/okapi/blob/master/doc/error-formats-in-folio.md) in `okapi`
+* 2018-02-06 -- [Depending on unreleased features](https://github.com/folio-org/stripes/blob/06714dc2fa4c9216f47402086790f982b103d674/doc/depending-on-unreleased-features.md)
 * 2018-03-14 -- [Uninstalling a running module](https://github.com/folio-org/mod-graphql/blob/master/doc/remove-running-modules.md) in `mod-graphql`
 * 2018-03-27 -- [An attempt to enumerate the requirements for FOLIO modules](https://github.com/folio-org/okapi/blob/master/doc/module-requirements.md) in `okapi`
 * 2018-10-10 -- [Developing with a Vagrant box](https://github.com/folio-org/mod-graphql/blob/master/doc/developing-with-a-vagrant-box.md) and [a related transcript](https://github.com/folio-org/mod-graphql/blob/master/doc/developing-with-a-vagrant-box--transcript.txt) in `mod-graphql`
+* 2019-09-22 -- [Testing Stripes UI modules with Jest and RTL](https://github.com/folio-org/ui-plugin-eusage-reports/blob/master/doc/testing-with-jest-and-rtl.md)
 * 2019-11-14 -- [Port-Forwarding for development](https://github.com/folio-org/mod-graphql/blob/master/doc/port-forwarding-for-development.md) in `mod-graphql`
+* 2020-04-09 -- [Building filters for your Stripes app](https://github.com/folio-org/stripes-smart-components/blob/99a70862c175bd5102d4dc656667e033c7b3d55b/lib/SearchAndSort/building-filters.md)
 * 2020-06-22 -- [Overview of ways to do automated UI testing](https://github.com/folio-org/ui-courses/blob/master/doc/testing-notes.md) in `ui-courses`
 * 2020-07-07 -- [Exposition of UI testing using Cypress and Yakbak](https://github.com/folio-org/ui-courses/blob/master/doc/testing-with-cypress.md) in `ui-courses`
 * 2020-10-02 -- [A proposal to separate interfaces from implementations](https://github.com/folio-org/okapi/blob/master/doc/proposal-to-separate-interfaces.md) in `okapi`
