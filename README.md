@@ -5,6 +5,7 @@
 I have often found myself writing documents about aspects of FOLIO that have general applicability, but arise in the context of a specific project. Those documents typically get written in the `doc` directory of whatever project I was working on at the time, which makes them hard to find later. Some examples:
 
 * 2017-01-12 -- [A modest proposal for error formats in FOLIO](https://github.com/folio-org/okapi/blob/master/doc/error-formats-in-folio.md) in `okapi`
+* 2017-10-05 -- [White paper: the FOLIO workflow engine](https://github.com/indexdata/mod-workflow/blob/master/doc/folio-workflow-engine.md)
 * 2018-02-06 -- [Depending on unreleased features](https://github.com/folio-org/stripes/blob/06714dc2fa4c9216f47402086790f982b103d674/doc/depending-on-unreleased-features.md)
 * 2018-03-14 -- [Uninstalling a running module](https://github.com/folio-org/mod-graphql/blob/master/doc/remove-running-modules.md) in `mod-graphql`
 * 2018-03-27 -- [An attempt to enumerate the requirements for FOLIO modules](https://github.com/folio-org/okapi/blob/master/doc/module-requirements.md) in `okapi`
