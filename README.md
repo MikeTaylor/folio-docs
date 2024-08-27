@@ -24,7 +24,7 @@ I have often found myself writing documents about aspects of FOLIO that have gen
 * 2022-02-14 -- [Running against a VM backend with a side-loaded backend module](https://github.com/indexdata/ui-harvester-admin/blob/main/doc/running.md) in `ui-harvester-admin`
 * 2022-03-18 -- [Re-establishing permissions after changing the module descriptor](https://github.com/indexdata/ui-harvester-admin/blob/main/doc/permissions.md) in `ui-harvester-admin`
 * 2022-07-06 -- [Deciding what modules to release for a new FOLIO flower release](https://github.com/folio-org/ui-ldp/blob/master/doc/new-folio-release.md) in `ui-ldp`.
-* 2023-09-29 -- [Authoring reports for the FOLIO Reporting App] (https://github.com/folio-org/ui-ldp/blob/master/doc/reports.md)
+* 2023-09-29 -- [Authoring reports for the FOLIO Reporting App](https://github.com/folio-org/ui-ldp/blob/master/doc/reports.md)
 
 As well as being an index to existing documents of this kind, the present repository is a holding area for new documents, which can then be moved somewhere more official as and when that is appropriate.
 
