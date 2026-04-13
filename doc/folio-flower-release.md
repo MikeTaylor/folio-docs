@@ -11,13 +11,13 @@ General instructions can be found in
 
 I am responsible for seven modules which may need releasing. The previous release was Poppy (R2-2023), and the most recent platform-complete tag in this series is [R2-2023-csp-2](https://github.com/folio-org/platform-complete/tree/R2-2023-csp-2). The versions of these modules included in that release are:
 
-* ui-courses ([UICR-198](https://folio-org.atlassian.net/browse/UICR-198)) -- v6.0.3
-* ui-ldp ([UILDP-146](https://folio-org.atlassian.net/browse/UILDP-146)) -- v2.0.1
-* ui-plugin-eusage-reports ([UIPER-121](https://folio-org.atlassian.net/browse/UIPER-121)) -- v3.0.0
-* ui-harvester-admin ([MODHAADM-80](https://folio-org.atlassian.net/browse/MODHAADM-80) **INCORRECT**) -- not included in flower releases, but the last release waa v2.1.0.
+* ui-courses ([UICR-240](https://folio-org.atlassian.net/browse/UICR-240)) -- v6.0.3
+* ui-ldp ([UILDP-XXX](https://folio-org.atlassian.net/browse/UILDP-XXX)) -- v2.0.1
+* ui-plugin-eusage-reports ([UIPER-157](https://folio-org.atlassian.net/browse/UIPER-157)) -- v3.0.0
+* ui-harvester-admin ([UIHAADM-162](https://folio-org.atlassian.net/browse/UIHAADM-162) **INCORRECT**) -- not included in flower releases, but the last release was v2.1.0.
 * ui-inventory-import ([UIINIMP-34](https://folio-org.atlassian.net/browse/UIINIMP-34))
-* mod-graphql ([MODGQL-180](https://folio-org.atlassian.net/browse/MODGQL-180)) -- v1.12.1
-* mod-z3950 ([ZF-97](https://folio-org.atlassian.net/browse/ZF-97)) -- v3.3.5
+* mod-graphql ([MODGQL-202](https://folio-org.atlassian.net/browse/MODGQL-202)) -- v1.12.1
+* mod-z3950 ([ZF-126](https://folio-org.atlassian.net/browse/ZF-126)) -- v3.3.5
 
 
 ## Stripes versions
