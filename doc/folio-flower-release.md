@@ -1,4 +1,4 @@
-# Mike's module releases for FOLIO Quesnelia
+# Mike's module releases for FOLIO Trillium
 
 
 ## Background
@@ -9,10 +9,10 @@ General instructions can be found in
 
 ## Modules
 
-I am responsible for seven modules which may need releasing. The previous release was Poppy (R2-2023), and the most recent platform-complete tag in this series is [R2-2023-csp-2](https://github.com/folio-org/platform-complete/tree/R2-2023-csp-2). The versions of these modules included in that release are:
+I am responsible for seven modules which may need releasing. The previous release was Sunflower (R1-2025), and the most recent platform-complete tag in this series is [R1-2025-okapi-csp-5-1](https://github.com/folio-org/platform-complete/tree/R1-2025-okapi-csp-5-1). The versions of these modules included in that release are:
 
 * ui-courses ([UICR-240](https://folio-org.atlassian.net/browse/UICR-240)) -- v6.0.3
-* ui-ldp ([UILDP-XXX](https://folio-org.atlassian.net/browse/UILDP-XXX)) -- v2.0.1
+* ui-ldp ([UILDP-195](https://folio-org.atlassian.net/browse/UILDP-195) -- v2.0.1
 * ui-plugin-eusage-reports ([UIPER-157](https://folio-org.atlassian.net/browse/UIPER-157)) -- v3.0.0
 * ui-harvester-admin ([UIHAADM-162](https://folio-org.atlassian.net/browse/UIHAADM-162) **INCORRECT**) -- not included in flower releases, but the last release was v2.1.0.
 * ui-inventory-import ([UIINIMP-34](https://folio-org.atlassian.net/browse/UIINIMP-34))
@@ -22,7 +22,7 @@ I am responsible for seven modules which may need releasing. The previous releas
 
 ## Stripes versions
 
-The version of Stripes included in Quesnelia will be v9.1._x_ (for various incrementing values of _x_ as service patches are released), so we need to determine whether the last releases of these modules will work with Stripes v9.1._x_. (They all worked with Stripes v9.0.5, which was included in Poppy, but it's possible some of them were locked to v9.0._x_ series.)
+The version of Stripes included in Trillium will be v9.1._x_ (for various incrementing values of _x_ as service patches are released), so we need to determine whether the last releases of these modules will work with Stripes v9.1._x_. (They all worked with Stripes v9.0.5, which was included in Sunflower, but it's possible some of them were locked to v9.0._x_ series.)
 
 In fact,
 ui-courses v6.0.3,
@@ -41,7 +41,7 @@ Since the most recent releases of the six modules:
 * ui-plugin-eusage-reports has had no substantive changes: only a pre-emptive version bump and some translations.
 * ui-harvester-admin has had no intrinsic changes since v2.1.0: only tweaks to the GitHub actions.
 * mod-graphql has no changes at all since the most recent release, v1.12.1.
-* mod-z3950 has had a release since the most recent Poppy, v3.4.0, but there have been no changes since then.
+* mod-z3950 has had a release since the most recent Sunflower, v3.4.0, but there have been no changes since then.
 
 Conclusion: ui-ldp needs to be released, but nothing else does!
 
