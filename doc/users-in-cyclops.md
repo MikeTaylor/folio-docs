@@ -26,6 +26,13 @@ The latter approach is preferable as it keeps all the authorization logic (users
 
 Both of these approaches require that CCMS trusts mod-cyclops: in approach 1, it must trust that mod-cyclops only makes authorized requests; in approach 2, it must trust mod-cyclops to correctly send the `xid` of the logged-in user. Of these, approach 2 is preferable because it is not vulnerable to business-logic errors in mod-cyclops.
 
+### Trust
+
 Is it a problem for CCMS to trust mod-cyclops? I don't think so, because this is what we do all the time in FOLIO. The Postgres database trusts the back-end modules to make sensible and non-malicious changes to its contents.
+
+
+## Summary: how CCMS should think of users
+
+In this approach, CCMS thinks of a "user" as an essentially opaque concept, managed at a higher level, and its only responsibilities are (1) to maintain the association of user `xid`s within specific roles within projects; and (2) enforce access authorization for the user trying to perform any operation. In short, it need deal only with CYCLOPS-specific authorization, not at all with authentication.
 
 
