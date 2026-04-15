@@ -9,28 +9,23 @@ General instructions can be found in
 
 ## Modules
 
-I am responsible for seven modules which may need releasing. The previous release was Sunflower (R1-2025), and the most recent platform-complete tag in this series is [R1-2025-okapi-csp-5-1](https://github.com/folio-org/platform-complete/tree/R1-2025-okapi-csp-5-1). The versions of these modules included in that release are:
+I am responsible for eight modules which may need releasing. The previous release was Sunflower (R1-2025), and the most recent platform-complete tag in this series is [R1-2025-okapi-csp-5-1](https://github.com/folio-org/platform-complete/tree/R1-2025-okapi-csp-5-1). The versions of these modules included in that release are:
 
-* ui-courses ([UICR-240](https://folio-org.atlassian.net/browse/UICR-240)) -- v6.0.3
-* ui-ldp ([UILDP-195](https://folio-org.atlassian.net/browse/UILDP-195) -- v2.0.1
-* ui-plugin-eusage-reports ([UIPER-157](https://folio-org.atlassian.net/browse/UIPER-157)) -- v3.0.0
-* ui-harvester-admin ([UIHAADM-162](https://folio-org.atlassian.net/browse/UIHAADM-162) **INCORRECT**) -- not included in flower releases, but the last release was v2.1.0.
-* ui-inventory-import ([UIINIMP-34](https://folio-org.atlassian.net/browse/UIINIMP-34))
-* mod-graphql ([MODGQL-202](https://folio-org.atlassian.net/browse/MODGQL-202)) -- v1.12.1
-* mod-z3950 ([ZF-126](https://folio-org.atlassian.net/browse/ZF-126)) -- v3.3.5
+ * ui-courses ([UICR-240](https://folio-org.atlassian.net/browse/UICR-240)) -- v7.0.3
+ * ui-ldp ([UILDP-195](https://folio-org.atlassian.net/browse/UILDP-195) -- v3.1.2
+ * ui-plugin-eusage-reports ([UIPER-157](https://folio-org.atlassian.net/browse/UIPER-157)) -- v4.0.1
+ * ui-harvester-admin ([UIHAADM-162](https://folio-org.atlassian.net/browse/UIHAADM-162)) -- **not included in flower releases** but most recent release is v3.0.0.
+ * ui-inventory-import ([UIINIMP-34](https://folio-org.atlassian.net/browse/UIINIMP-34)) -- N/A
+ * mod-graphql ([MODGQL-202](https://folio-org.atlassian.net/browse/MODGQL-202)) -- v1.13.1
+ * mod-z3950 ([ZF-126](https://folio-org.atlassian.net/browse/ZF-126)) -- v4.0.1
+ * mod-reporting ([MODREP-51](https://folio-org.atlassian.net/browse/MODREP-51)) -- v1.5.0
 
 
 ## Stripes versions
 
-The version of Stripes included in Trillium will be v9.1._x_ (for various incrementing values of _x_ as service patches are released), so we need to determine whether the last releases of these modules will work with Stripes v9.1._x_. (They all worked with Stripes v9.0.5, which was included in Sunflower, but it's possible some of them were locked to v9.0._x_ series.)
+According to [the Offically Supported Technologies page for Trillium](https://folio-org.atlassian.net/wiki/spaces/TC/pages/730891059/Trillium), the version of Stripes included in Trillium will be v10.1._x_ (for various incrementing values of _x_ as service patches are released), and we will use React v18.2._x_ (but nothing is said about other peer-dependencies such as `react-intl` and `react-router`).
 
-In fact,
-ui-courses v6.0.3,
-ui-ldp v2.0.1
-ui-plugin-eusage-reports v3.0.0
-and
-ui-harvester v2.1.0
-all depend on Stripes ^9.0.0, so none of them need to be re-released in order to run on the new version of Stripes.
+So we need to determine whether the last releases of these modules will work with Stripes v10.1._x_. (They all worked with Stripes v10.0.x, which was included in Sunflower, but it's possible some of them were locked to v10.0._x_ series). React 18.2 was also used in Sunflower, so we can be confident about it.
 
 
 ## Changes in modules
