@@ -36,4 +36,5 @@ From now on, I am going to put such documents in this repository. Here is what e
 * 2022-11-08 -- [Fixing the security problem in mod-configuration](doc/fixing-mod-configuration.md)
 * 2022-11-16 -- [A user-interface for FOLIO customization](doc/customization-ui.md)
 * 2026-04-13 -- [Mike's module releases for FOLIO Quesnelia](doc/folio-flower-release.md)
+* 2026-10-16 -- [User access to reports in the Reporting app](doc/user-access-to-reports.md)
 
