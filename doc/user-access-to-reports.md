@@ -11,6 +11,7 @@
     * [Restrictions implemented in mod-reporting](#restrictions-implemented-in-mod-reporting)
     * [Restrictions implemented in Metadb](#restrictions-implemented-in-metadb)
 * [Recommendation](#recommendation)
+* [Breakdown into work items](#breakdown-into-work-items)
 
 
 ## Introduction
@@ -25,14 +26,14 @@ Reports are sourced from repositories in publicly visible version-control system
 
 ### The problem
 
-At present, every report is available for any user to run. This may not be appropriate for many reasons. For example: some reports may provide information that the user should be be allowed to see; others may take a long time to run and should only be invoked by those who understand the implications.
+At present, every report is available for any user to run. This may not be appropriate for many reasons. For example: some reports may provide information that the user should be allowed to see; others may take a long time to run and should only be invoked by those who understand the implications.
 
 
 ### How the solution will look
 
-We want the ability to assign a set of one or more users to a given report repository, and allow only those users to run the reports therein. [UILDP-199](https://folio-org.atlassian.net/browse/UILDP-199) has been filed to capture this requirement. The idea is that in the settings page, each report repository will have an additional field listing the users who are allowed to run reports from that repository. Management of the list will follow the UI template laid down for access to acquisition units in [the Aquisitions units app](https://indexdata-test.folio.indexdata.com/settings/acquisition-units/a3496137-8d2b-4d18-bd4b-e8fca05fec75/view): at the bottom of each report repository's definition, there will be an **Assign users** button that pops up a user selection plugin.
+We want the ability to assign a set of one or more users to a given report repository, and allow only those users to run the reports therein. [UILDP-199](https://folio-org.atlassian.net/browse/UILDP-199) has been filed to capture this requirement. The idea is that in the settings page, each report repository will have an additional field listing the users who are allowed to run reports from that repository. Management of the list will follow the UI template laid down for access to acquisition units in [the Acquisitions units app](https://indexdata-test.folio.indexdata.com/settings/acquisition-units/a3496137-8d2b-4d18-bd4b-e8fca05fec75/view): at the bottom of each report repository's definition, there will be an **Assign users** button that pops up a user selection plugin.
 
-But how to implement this? There are two major technical decision to be made:
+But how to implement this? There are two major technical decisions to be made:
 * How to represent the availability of a report repo to a user?
 * Where in the software stack to implement the restrictions?
 
@@ -40,7 +41,7 @@ But how to implement this? There are two major technical decision to be made:
 
 ## Representation of user permissions
 
-Because assigning a user to a report repository is, in a broad sense, giving that user a permission, it's an appealing idea to implement the permissions to access report repository as FOLIO permissions. This would be done by providing a FOLIO permission for access to report repo, and assigning that permission to users either by the existing permission management facilities or via the **Assign users** button described above.
+Because assigning a user to a report repository is, in a broad sense, giving that user a permission, it's an appealing idea to implement the permissions to access report repositories as FOLIO permissions. This would be done by providing a FOLIO permission for access to report repo, and assigning that permission to users either by the existing permission management facilities or via the **Assign users** button described above.
 
 Since the set of report repos is dynamic, this cannot be achieved using a static set of permissions. But could it be done using Okapi's `permissionsDesired` facility, using wildcards [as in the mod-settings module descriptor](https://github.com/folio-org/mod-settings/blob/5f1b31a59e642955df4f1fa638656066280f79b1/descriptors/ModuleDescriptor-template.json#L147-L159)?
 
@@ -52,7 +53,7 @@ This is probably possible, but cumbersome in at least two ways.
 
 Once we also consider the uncertainties of permission management under Eureka, this approach seems to introduce more complexity and doubt than it's worth.
 
-Instead, we will simply store the list of which users are allowed to use which report repos in the same settings object that already contrains the report-repo configuration -- adding a seventh field which is the list of authorized users. (This does not introduce any new security loopholes, as any user with authorization to modify the user permissions for a report repo already has authorization to change the definition of the report repo itself.)
+Instead, we will simply store the list of which users are allowed to use which report repos in the same settings object that already contains the report-repo configuration -- adding a seventh field which is the list of authorized users. (This does not introduce any new security loopholes, as any user with authorization to modify the user permissions for a report repo already has authorization to change the definition of the report repo itself.)
 
 Extending the **Report repositories** settings page to allow management of authorized users is its own UI-only task, separate from that of enforcing restrictions.
 
@@ -60,14 +61,14 @@ Extending the **Report repositories** settings page to allow management of autho
 
 ## Candidate implementations of restrictions
 
-How to enforce users' per-repo permissions? Enforcement would be easy to implement in the UI, but of course easy to bypass. That would have some value as a low guardrail helping to keep people away from reports they’re not meant to be using, but not at all as a razor-wire fence to keep out people determined to do so. Implementing such restrictions on the server side, in mod-reporting, is much more secure but correspondingly more work. And wiring the notion of per-user permissions right though to individual users at the Metadb level would be more secure still, but a lot more work, including designing elements of the solution that we don’t have a handle on yet.
+How to enforce users' per-repo permissions? Enforcement would be easy to implement in the UI, but of course easy to bypass. That would have some value as a low guardrail helping to keep people away from reports they’re not meant to be using, but not at all as a razor-wire fence to keep out people determined to do so. Implementing such restrictions on the server side, in mod-reporting, is much more secure but correspondingly more work. And wiring the notion of per-user permissions right through to individual users at the Metadb level would be more secure still, but a lot more work, including designing elements of the solution that we don’t have a handle on yet.
 
 Here we consider the three implementation approaches from the simplest (and least secure) to most complex (and most secure).
 
 
 ### UI-only restrictions
 
-This is the most lightweight way to implement per-user restrictions is in the UI: the Reporting app would not list reports that are not available to the logged-in user, and if the user hacked the URL to land on the page of such a report it would refuse to display it or send it to mod-reporting.
+The most lightweight way to implement per-user restrictions is in the UI: the Reporting app would not list reports that are not available to the logged-in user, and if the user hacked the URL to land on the page of such a report it would refuse to display it or send it to mod-reporting.
 
 This solution would be of some value, but would be very easy for a user to bypass: it is a guard against error, but not against malice. A user could easily formulate a WSAPI request against mod-reporting that asks it to run an unauthorized report.
 
@@ -76,11 +77,11 @@ If there are other clients that invoke reports via mod-reporting, such as a dail
 
 ### Restrictions implemented in mod-reporting
 
-A further layer of security can be introduced by having mod-reporting verify for itself, on the server side, that when a user ask to run a report, that user is authorized for the report repo it's taken from.
+A further layer of security can be introduced by having mod-reporting verify for itself, on the server side, that when a user asks to run a report, that user is authorized for the report repo it's taken from.
 
 This would require that mod-reporting pick apart the path of the requested report to determine what repo it's from, then load that repo's definition from mod-settings, and check whether the logged-in user is among those listed as authorized to run reports from that repo. Since the mod-reporting code already accesses mod-settings (to discover the location of the reporting database), this may not be especially onerous.
 
-The trickiest part of this will be resolving a report URL, such as `https://github.com/seneyl/test_reports/blob/main/circulation2/additional_directory/circ_by_group.sql`, into a report-repo definition: in this case, type=`github`, user=`seneyl`, repo=`test_reports`, branch=`main`, directory=`circulation2/additional_directory`. There is some potential ambiguity in the case that multiple report repos are defined, one targetting a subdirectory of another. In such cases, we can either resolve on the most specific of the nesed report repos, or allow access if the user is authorized for any of the repos.
+The trickiest part of this will be resolving a report URL, such as `https://github.com/seneyl/test_reports/blob/main/circulation2/additional_directory/circ_by_group.sql`, into a report-repo definition: in this case, type=`github`, user=`seneyl`, repo=`test_reports`, branch=`main`, directory=`circulation2/additional_directory`. There is some potential ambiguity in the case that multiple report repos are defined, one targeting a subdirectory of another. In such cases, we can either resolve on the most specific of the nested report repos, or allow access if the user is authorized for any of the repos.
 
 If we implement restrictions in mod-reporting, malicious users will be unable to gain access to unauthorized reports by hand-crafting WSAPI requests: the module will reject (and probably log) such requests.
 
@@ -116,3 +117,11 @@ So **enforcement at the level of mod-reporting is the way to go**.
 
 
 
+
+## Breakdown into work items
+
+* User interface (UILDP):
+  * Settings -> Reporting -> Report repositories: each repository's entry will have an additional **Users** field containing a list of the UUIDs of users who are permitted to run the reports in that repository. (UX is briefly discussed above.)
+  * Consider a broader change the UX for report repository maintenance, as the addition of yet another field makes the current all-details-in-a-single-list approach feel like a poor fit.
+  * Add code preventing the UI from offering reports from repositories that the logged-in user is not authorized to use. This does not increase security, but protects innocent users from being exposed to security errors from the server.
+  
