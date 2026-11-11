@@ -26,7 +26,7 @@ Reports are sourced from repositories in publicly visible version-control system
 
 ### The problem
 
-At present, every report is available for any user to run. This may not be appropriate for many reasons. For example: some reports may provide information that the user should be allowed to see; others may take a long time to run and should only be invoked by those who understand the implications.
+At present, every report is available for any user to run. This may not be appropriate for many reasons. For example: some reports may provide information that the user should not be allowed to see; others may take a long time to run and should only be invoked by those who understand the implications.
 
 
 ### How the solution will look
@@ -91,7 +91,7 @@ If we implement restrictions in mod-reporting, malicious users will be unable to
 
 A yet more secure option would be to have Metadb itself enforce access to reports. This would offer two advantages:
 
-1. Accesses to Metadb from sources other than mod-reporting could be subject to gatekeeping.
+1. Access to Metadb from sources other than mod-reporting could be subject to gatekeeping.
 2. Metadb could in principle enforce column-level access restrictions.
 
 Exactly how this would work, though, is not clear:
@@ -117,11 +117,15 @@ So **enforcement at the level of mod-reporting is the way to go**.
 
 
 
-
 ## Breakdown into work items
 
 * User interface (UILDP):
   * Settings -> Reporting -> Report repositories: each repository's entry will have an additional **Users** field containing a list of the UUIDs of users who are permitted to run the reports in that repository. (UX is briefly discussed above.)
-  * Consider a broader change the UX for report repository maintenance, as the addition of yet another field makes the current all-details-in-a-single-list approach feel like a poor fit.
+  * Consider a broader change to the UX for report repository maintenance, as the addition of yet another field makes the current all-details-in-a-single-list approach feel like a poor fit.
   * Add code preventing the UI from offering reports from repositories that the logged-in user is not authorized to use. This does not increase security, but protects innocent users from being exposed to security errors from the server.
-  
+* Back-end code (MODREP):
+  * When handling a request to run a report (`POST /ldp/db/reports`), mod-reporting must analyse the URL of the requested report to discover what repo it belongs to.
+  * mod-reporting must load the report-repo definition from mod-settings and reject the reporting request if the acting user (`req.Header.Get("X-Okapi-User-Id")`) is not among those listed as authorized.
+
+
+
