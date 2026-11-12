@@ -120,7 +120,7 @@ So **enforcement at the level of mod-reporting is the way to go**.
 ## Breakdown into work items
 
 * User interface (UILDP):
-  * Settings -> Reporting -> Report repositories: each repository's entry will have an additional **Users** field containing a list of the UUIDs of users who are permitted to run the reports in that repository. (UX is briefly discussed above.)
+  * [UILDP-200](https://folio-org.atlassian.net/browse/UILDP-200). Settings -> Reporting -> Report repositories: each repository's entry will have an additional **Users** field containing a list of the UUIDs of users who are permitted to run the reports in that repository. (UX is briefly discussed above.)
   * Consider a broader change to the UX for report repository maintenance, as the addition of yet another field makes the current all-details-in-a-single-list approach feel like a poor fit.
   * Add code preventing the UI from offering reports from repositories that the logged-in user is not authorized to use. This does not increase security, but protects innocent users from being exposed to security errors from the server.
 * Back-end code (MODREP):
