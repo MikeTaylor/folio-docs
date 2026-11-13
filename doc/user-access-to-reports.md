@@ -124,8 +124,7 @@ So **enforcement at the level of mod-reporting is the way to go**.
   * Consider a broader change to the UX for report repository maintenance, as the addition of yet another field makes the current all-details-in-a-single-list approach feel like a poor fit.
   * Add code preventing the UI from offering reports from repositories that the logged-in user is not authorized to use. This does not increase security, but protects innocent users from being exposed to security errors from the server.
 * Back-end code (MODREP):
-  * When handling a request to run a report (`POST /ldp/db/reports`), mod-reporting must analyse the URL of the requested report to discover what repo it belongs to.
-  * mod-reporting must load the report-repo definition from mod-settings and reject the reporting request if the acting user (`req.Header.Get("X-Okapi-User-Id")`) is not among those listed as authorized.
+  * [MODREP-64](https://folio-org.atlassian.net/browse/MODREP-64). When handling a request to run a report (`POST /ldp/db/reports`), mod-reporting must analyse the URL of the requested report to discover what repo it belongs to. It must load the report-repo definition from mod-settings and reject the reporting request if the acting user (`req.Header.Get("X-Okapi-User-Id")`) is not among those listed as authorized.
 
 
 
